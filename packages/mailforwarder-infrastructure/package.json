@@ -1,19 +1,35 @@
 {
-  "name": "mailforwarder-infrastructure",
+  "name": "packages",
   "version": "0.1.0",
-  "description": "> TODO: description",
-  "author": "Nobuhiro Ito <iseebi@iseteki.net>",
-  "homepage": "",
-  "license": "ISC",
-  "main": "lib/mailforwarder-infrastructure.js",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+  "bin": {
+    "packages": "bin/packages.js"
   },
-  "files": [
-    "lib"
-  ],
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "deploy": "tsc && cdk deploy"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "@types/node": "10.17.27",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.2.0",
+    "aws-cdk": "2.8.0",
+    "ts-node": "^9.0.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-iam": "^1.139.0",
+    "@aws-cdk/aws-kms": "^1.139.0",
+    "@aws-cdk/aws-lambda": "^1.139.0",
+    "@aws-cdk/aws-s3": "^1.139.0",
+    "@aws-cdk/aws-ses": "^1.139.0",
+    "@aws-cdk/aws-ses-actions": "^1.139.0",
+    "@aws-cdk/aws-sns": "^1.139.0",
+    "aws-cdk-lib": "2.8.0",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.16"
   }
 }
