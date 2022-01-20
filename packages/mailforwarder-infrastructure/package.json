@@ -1,0 +1,19 @@
+{
+  "name": "mailforwarder-infrastructure",
+  "version": "0.1.0",
+  "description": "> TODO: description",
+  "author": "Nobuhiro Ito <iseebi@iseteki.net>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/mailforwarder-infrastructure.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
