@@ -1,5 +1,5 @@
 import { SESMessage } from "aws-lambda";
 
-export interface IReceiveUseCase {
+export interface ReceiveUseCase {
   handleReceiveEventAsync(message: SESMessage): Promise<void>;
 }

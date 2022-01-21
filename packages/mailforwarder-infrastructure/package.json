@@ -25,6 +25,7 @@
     "@aws-cdk/aws-iam": "^1.139.0",
     "@aws-cdk/aws-kms": "^1.139.0",
     "@aws-cdk/aws-lambda": "^1.139.0",
+    "@aws-cdk/aws-lambda-event-sources": "^1.140.0",
     "@aws-cdk/aws-s3": "^1.139.0",
     "@aws-cdk/aws-ses": "^1.139.0",
     "@aws-cdk/aws-ses-actions": "^1.139.0",

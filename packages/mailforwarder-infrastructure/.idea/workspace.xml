@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2c52eef1-004d-4d2f-9370-76aff1446e84" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/.idea/prettier.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/container.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/models/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/usecases/receive/implementation.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/usecases/receive/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/usecases/receive/interface.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/packages-stack.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/packages-stack.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mailforwarder-functions/src/container.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/container.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mailforwarder-functions/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../mailforwarder-functions/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +30,7 @@
     <property name="node.js.selected.package.stylelint" value="" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
-    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -51,7 +41,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1642675752333</updated>
-      <workItem from="1642675754758" duration="14267000" />
+      <workItem from="1642675754758" duration="15525000" />
+      <workItem from="1642767979637" duration="6774000" />
     </task>
     <servers />
   </component>
@@ -78,6 +69,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
