@@ -1,4 +1,5 @@
 import { S3 } from "aws-sdk";
+import { Readable } from "stream";
 import { StorageDatastore } from "./interface";
 
 class StorageDatastoreImplementation implements StorageDatastore {
@@ -15,6 +16,15 @@ class StorageDatastoreImplementation implements StorageDatastore {
       })
       .promise();
     return result.Body as Buffer;
+  }
+
+  public getObjectBinaryReadStream(bucketName: string, key: string): Readable {
+    return this.client
+      .getObject({
+        Bucket: bucketName,
+        Key: key,
+      })
+      .createReadStream();
   }
 }
 export default StorageDatastoreImplementation;

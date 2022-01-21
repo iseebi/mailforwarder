@@ -1,5 +1,7 @@
 import axios from "axios";
+import { Readable } from "stream";
 import { ReceiverDatastore } from "./interface";
+import * as FormData from "form-data";
 
 class ReceiverDatastoreImplementation implements ReceiverDatastore {
   private readonly deliverUrl: string;
@@ -10,10 +12,10 @@ class ReceiverDatastoreImplementation implements ReceiverDatastore {
     this.authorization = authorization;
   }
 
-  public async deliverMessageAsync(accountEmail: string, from: string, data: Buffer): Promise<void> {
+  public async deliverMessageAsync(accountEmail: string, from: string, dataReadable: Readable): Promise<void> {
     const params = new FormData();
 
-    params.append("mail", new Blob([data.buffer]), "mail.eml");
+    params.append("mail", dataReadable, "mail.eml");
     params.append("to", accountEmail);
     params.append("from", from);
     await axios.post(this.deliverUrl, params, {
