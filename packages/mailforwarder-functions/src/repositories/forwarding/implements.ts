@@ -69,10 +69,14 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
       { forwardingId },
       {},
       {
-        UpdateExpression: "set #status = :status",
-        ExpressionAttributeValues: {
+        UpdateExpression: "set #status = :status, #forwardedAt = :forwardedAt",
+        ExpressionAttributeNames: {
           "#status": "status",
+          "#forwardedAt": "forwardedAt",
+        },
+        ExpressionAttributeValues: {
           ":status": ForwardingStatus.Completed,
+          ":forwardedAt": new Date().getTime(),
         },
       },
     );
@@ -86,8 +90,10 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
         {},
         {
           UpdateExpression: "set #status = :status",
-          ExpressionAttributeValues: {
+          ExpressionAttributeNames: {
             "#status": "status",
+          },
+          ExpressionAttributeValues: {
             ":status": ForwardingStatus.Failed,
           },
         },
