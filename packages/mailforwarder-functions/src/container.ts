@@ -60,7 +60,7 @@ class AppContainer {
         this.getReceiverDatastore(),
         constants.tables.forwardingTableName,
         constants.queue.forwardingQueueUrl,
-        constants.mailboxBucketName,
+        constants.receiveBucketName,
       );
     }
     return this.forwardingRepository;

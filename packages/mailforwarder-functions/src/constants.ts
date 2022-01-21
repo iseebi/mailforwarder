@@ -11,7 +11,7 @@ const constants = {
     url: process.env.MAIL_RECEIVER_URL || "",
     authorization: process.env.MAIL_RECEIVER_AUTH || "",
   },
-  mailboxBucketName: process.env.MAILBOX_BUCKET_NAME || "",
+  receiveBucketName: process.env.RECIEVE_BUCKET_NAME || "",
 };
 
 export default constants;

@@ -12,7 +12,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
   private readonly receiver: ReceiverDatastore;
   private readonly forwardingTableName: string;
   private readonly forwardingQueueUrl: string;
-  private readonly mailboxBucketName: string;
+  private readonly receiveBucketName: string;
 
   public constructor(
     dynamoDb: DynamoDbDatastore,
@@ -21,7 +21,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
     receiver: ReceiverDatastore,
     forwardingTableName: string,
     forwardingQueueUrl: string,
-    mailboxBucketName: string,
+    receiveBucketName: string,
   ) {
     this.dynamoDb = dynamoDb;
     this.forwardingTableName = forwardingTableName;
@@ -29,7 +29,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
     this.storage = storage;
     this.receiver = receiver;
     this.forwardingQueueUrl = forwardingQueueUrl;
-    this.mailboxBucketName = mailboxBucketName;
+    this.receiveBucketName = receiveBucketName;
   }
 
   public async getAsync(forwardingId: string): Promise<Forwarding | undefined> {
@@ -51,7 +51,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
 
   public async executeForwardAsync(forwarding: Forwarding, accountEmail: string): Promise<void> {
     try {
-      const data = await this.storage.getObjectBinaryAsync(this.mailboxBucketName, forwarding.objectKey);
+      const readStream = this.storage.getObjectBinaryReadStream(this.receiveBucketName, forwarding.objectKey);
       const from =
         forwarding.headers.from && forwarding.headers.from.length > 0
           ? forwarding.headers.from[0]
