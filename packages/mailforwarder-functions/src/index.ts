@@ -1,4 +1,4 @@
-import { Callback, Context, SESMessage, SNSEvent } from "aws-lambda";
+import { Callback, Context, SESMessage, SNSEvent, SQSEvent } from "aws-lambda";
 import AppContainer from "./container";
 import { Forwarding } from "./models";
 
@@ -15,10 +15,10 @@ export const receiveMailTopicHandler = (event: SNSEvent, context: Context, callb
     .catch((e) => callback(e));
 };
 
-export const forwardMailTopicHandler = (event: SNSEvent, context: Context, callback: Callback) => {
+export const forwardMailTopicHandler = (event: SQSEvent, context: Context, callback: Callback) => {
   Promise.all(
     event.Records.map(async (e) => {
-      const forwarding = JSON.parse(e.Sns.Message) as Forwarding;
+      const forwarding = JSON.parse(e.body) as Forwarding;
       await container.getForwardingUseCase().handleForwardEventAsync(forwarding);
     }),
   )
