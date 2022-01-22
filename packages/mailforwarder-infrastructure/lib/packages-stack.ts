@@ -85,7 +85,7 @@ export class PackagesStack extends Stack {
       accessControl: s3.BucketAccessControl.PRIVATE,
     });
     receiveBucket.addLifecycleRule({
-      expiration: Duration.days(60),
+      expiration: Duration.days(90),
     })
     receiveBucket.grantRead(functionRole);
     const receiveTopic = new sns.Topic(this, "ReceiveMailTopic");
