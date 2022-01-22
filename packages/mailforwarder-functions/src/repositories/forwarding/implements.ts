@@ -52,10 +52,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
   public async executeForwardAsync(forwarding: Forwarding, accountEmail: string): Promise<boolean> {
     try {
       const readStream = this.storage.getObjectBinaryReadStream(this.receiveBucketName, forwarding.objectKey);
-      const from =
-        forwarding.headers.from && forwarding.headers.from.length > 0
-          ? forwarding.headers.from[0]
-          : "undisclosed-recipients";
+      const from = "undisclosed-recipients";
       await this.receiver.deliverMessageAsync(accountEmail, from, readStream);
       await this.markCompletedAsync(forwarding.forwardingId);
       return true;
