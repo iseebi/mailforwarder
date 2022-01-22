@@ -13,23 +13,32 @@ class MappingsRepositoryImplementation implements MappingsRepository {
 
   public async lookupMappingAsync(accountPart: string, hostPart: string): Promise<AccountMapping | undefined> {
     try {
-      return (
+      const result = (
         await this.dynamoDb.getItemAsync<AccountMapping>(this.mappingTableName, {
           mappingKey: `${accountPart}@${hostPart}`,
         })
       ).item;
-    } catch {
+      if (result) {
+        return result;
+      }
+    } catch (e) {
+      console.log(`Lookup failed key: ${accountPart}@${hostPart} ${e}`);
       // continue
     }
     try {
-      return (
+      const result = (
         await this.dynamoDb.getItemAsync<AccountMapping>(this.mappingTableName, {
           mappingKey: `@${hostPart}`,
         })
       ).item;
-    } catch {
-      return undefined;
+      if (result) {
+        return result;
+      }
+    } catch (e) {
+      console.log(`Lookup failed key: @${hostPart} ${e}`);
+      // continue
     }
+    return undefined;
   }
 }
 
