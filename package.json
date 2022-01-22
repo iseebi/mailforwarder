@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lerna": "lerna",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "deploy-ci": "lerna run deploy-ci"
   },
   "author": "Nobuhiro Ito",
   "license": "ISC",
