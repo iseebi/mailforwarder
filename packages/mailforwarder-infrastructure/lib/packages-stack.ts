@@ -102,18 +102,11 @@ export class PackagesStack extends Stack {
       ]
     });
 
-    // Mailbox
-    const muaUser = new iam.User(this, "MailForwarder-MUAUser");
-    const mailboxBucket = new s3.Bucket(this, "MailboxBucket", {
-      accessControl: s3.BucketAccessControl.PRIVATE,
-    });
-    mailboxBucket.grantReadWrite(muaUser);
-
     // lambda environment
     const environment = {
-      ...tableNameEnvironments, 
+      ...tableNameEnvironments,
       ...queueNameEnvironments,
-      MAILBOX_BUCKET_NAME: mailboxBucket.bucketName,
+      RECIEVE_BUCKET_NAME: receiveBucket.bucketName,
       MAIL_RECEIVER_URL: mailReceiverUrl,
       MAIL_RECEIVER_AUTH: mailReceiverAuthorization
     };
@@ -147,5 +140,12 @@ export class PackagesStack extends Stack {
       sourceArn: forwardingQueue.queueArn
     });
     forwardMailFunction.addEventSource(new lambdaEvents.SqsEventSource(forwardingQueue))
+
+    // Mailbox
+    const muaUser = new iam.User(this, "MailForwarder-MUAUser");
+    const mailboxBucket = new s3.Bucket(this, "MailboxBucket", {
+      accessControl: s3.BucketAccessControl.PRIVATE,
+    });
+    mailboxBucket.grantReadWrite(muaUser);
   }
 }
