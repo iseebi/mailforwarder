@@ -64,6 +64,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
   }
 
   public async markCompletedAsync(forwardingId: string): Promise<void> {
+    console.info(`[${forwardingId}] mark completed`);
     await this.dynamoDb.updateItemAsync<Forwarding>(
       this.forwardingTableName,
       { forwardingId },
@@ -84,6 +85,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
 
   public async markFailedAsync(forwardingId: string): Promise<void> {
     try {
+      console.warn(`[${forwardingId}] mark failed`);
       await this.dynamoDb.updateItemAsync<Forwarding>(
         this.forwardingTableName,
         { forwardingId },

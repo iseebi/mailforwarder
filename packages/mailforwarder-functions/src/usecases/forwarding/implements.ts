@@ -28,7 +28,9 @@ class ForwardingUseCaseImplementation implements ForwardingUseCase {
       await this.forwardingRepository.markFailedAsync(forwarding.forwardingId);
       return;
     }
+    console.info(`[${inputForwarding.forwardingId}] forwarding start`);
     await this.forwardingRepository.executeForwardAsync(forwarding, account.accountEmail);
+    console.info(`[${inputForwarding.forwardingId}] forwarding end`);
   }
 }
 
