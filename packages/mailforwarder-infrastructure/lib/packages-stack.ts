@@ -147,5 +147,18 @@ export class PackagesStack extends Stack {
       accessControl: s3.BucketAccessControl.PRIVATE,
     });
     mailboxBucket.grantReadWrite(muaUser);
+
+    // Mail Sender
+    const mailSender = new iam.User(this, "MailSender");
+    mailSender.addToPrincipalPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      resources: [
+        '*'
+      ],
+      actions: [
+        'ses:SendRawEmail',
+        'ses:SendEmail',
+      ]
+    }));
   }
 }
