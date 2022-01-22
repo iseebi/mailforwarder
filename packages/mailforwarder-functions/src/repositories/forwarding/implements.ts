@@ -49,17 +49,20 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
     await this.queue.enqueueAsync(this.forwardingQueueUrl, forwarding);
   }
 
-  public async executeForwardAsync(forwarding: Forwarding, accountEmail: string): Promise<void> {
+  public async executeForwardAsync(forwarding: Forwarding, accountEmail: string): Promise<boolean> {
     try {
       const readStream = this.storage.getObjectBinaryReadStream(this.receiveBucketName, forwarding.objectKey);
       const from =
         forwarding.headers.from && forwarding.headers.from.length > 0
           ? forwarding.headers.from[0]
           : "undisclosed-recipients";
-      await this.receiver.deliverMessageAsync(accountEmail, from, data);
+      await this.receiver.deliverMessageAsync(accountEmail, from, readStream);
       await this.markCompletedAsync(forwarding.forwardingId);
-    } catch {
+      return true;
+    } catch (e) {
+      console.error(`[${forwarding.forwardingId}] API call failed ${e}`);
       await this.markFailedAsync(forwarding.forwardingId);
+      return false;
     }
   }
 

@@ -18,12 +18,12 @@ class ReceiverDatastoreImplementation implements ReceiverDatastore {
     params.append("mail", dataReadable, "mail.eml");
     params.append("to", accountEmail);
     params.append("from", from);
-    await axios.post(this.deliverUrl, params, {
-      headers: {
-        "content-type": "multipart/form-data",
+    const result = await axios.post(this.deliverUrl, params, {
+      headers: params.getHeaders({
         authorization: this.authorization,
-      },
+      }),
     });
+    console.info(`Status: ${result.status}`);
   }
 }
 export default ReceiverDatastoreImplementation;
