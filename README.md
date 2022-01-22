@@ -44,13 +44,17 @@ $ npm run deploy-ci
 
 ### IAM
 
-mailreceiverのメールボックスバケット(S3QLで使用)も、このスタックで合わせて作られており、これにアクセスできるユーザーとしてMailForwarderStack-MailForwarderMUAUser*がある。
+以下の目的のユーザーが作成されているので、必要があればアクセスキーを発行しておく。
 
-S3QLで使用するために、アクセスキーを発行しておく。(取り扱いには特に注意する)
+- MailForwarderStack-MailForwarderMUAUser*
+    - mailreceiverのメールボックスS3バケット用(S3QLで使用)
+- MailForwarderStack-MailSender*
+    - SESメール送信用 (要送信制限解除)
+    - IAMの管理画面からアクセスキーを発行した後、[こちら](https://aws.amazon.com/jp/premiumsupport/knowledge-center/ses-rotate-smtp-access-keys/)の方法を使ってSMTPパスワードに変換する。
 
 ### S3
 
-mailreceiverのメールボックスバケット`mailforwarderstack-mailboxbucket*`の名前を控えておく。
+mailreceiverのメールボックスバケットを使う予定があれば、`mailforwarderstack-mailboxbucket*`が同時に作成されるので名前を控えておく。
 
 ### DynamoDB
 
