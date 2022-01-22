@@ -3,7 +3,7 @@ import { SESMailCommonHeaders } from "aws-lambda/trigger/ses";
 export const ForwardingStatus = {
   Received: "received",
   Completed: "completed",
-  Failed: "completed",
+  Failed: "failed",
 };
 export type ForwardingStatus = typeof ForwardingStatus[keyof typeof ForwardingStatus];
 
