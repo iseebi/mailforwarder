@@ -1,0 +1,18 @@
+{
+  "name": "mailforwarder",
+  "version": "0.1.0",
+  "description": "mail forwarding service with aws",
+  "main": "index.js",
+  "scripts": {
+    "lerna": "lerna",
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "deploy-ci": "lerna run deploy-ci"
+  },
+  "author": "Nobuhiro Ito",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "lerna": "^4.0.0"
+  }
+}
