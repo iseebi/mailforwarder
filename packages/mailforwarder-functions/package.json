@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1061.0",
-    "axios": "^0.25.0",
+    "axios": "^1.6.7",
     "form-data": "^4.0.0"
   }
 }
