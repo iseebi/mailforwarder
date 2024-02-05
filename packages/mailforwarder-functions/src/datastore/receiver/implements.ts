@@ -1,7 +1,4 @@
-import axios from "axios";
-import { Readable } from "stream";
 import { ReceiverDatastore } from "./interface";
-import * as FormData from "form-data";
 
 class ReceiverDatastoreImplementation implements ReceiverDatastore {
   private readonly deliverUrl: string;
@@ -12,18 +9,25 @@ class ReceiverDatastoreImplementation implements ReceiverDatastore {
     this.authorization = authorization;
   }
 
-  public async deliverMessageAsync(accountEmail: string, from: string, dataReadable: Readable): Promise<void> {
-    const params = new FormData();
+  public async deliverMessageAsync(accountEmail: string, from: string, dataBlob: Blob): Promise<void> {
+    const body = new FormData();
 
-    params.append("mail", dataReadable, "mail.eml");
-    params.append("to", accountEmail);
-    params.append("from", from);
-    const result = await axios.post(this.deliverUrl, params, {
-      headers: params.getHeaders({
+    body.append("mail", dataBlob, "mail.eml");
+    body.append("to", accountEmail);
+    body.append("from", from);
+    const response = await fetch(this.deliverUrl, {
+      method: "POST",
+      headers: {
         authorization: this.authorization,
-      }),
+      },
+      body: body as unknown as BodyInit,
     });
-    console.info(`Status: ${result.status}`);
+    if (!response.ok) {
+      throw new Error(`Failed to deliver message: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.text();
+    console.info(`Status: ${result}`);
   }
 }
 export default ReceiverDatastoreImplementation;
