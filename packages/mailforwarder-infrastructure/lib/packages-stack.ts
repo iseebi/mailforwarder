@@ -106,9 +106,9 @@ export class PackagesStack extends Stack {
     const environment = {
       ...tableNameEnvironments,
       ...queueNameEnvironments,
-      RECIEVE_BUCKET_NAME: receiveBucket.bucketName,
+      RECEIVE_BUCKET_NAME: receiveBucket.bucketName,
       MAIL_RECEIVER_URL: mailReceiverUrl,
-      MAIL_RECEIVER_AUTH: mailReceiverAuthorization
+      MAIL_RECEIVER_AUTH: mailReceiverAuthorization,
     };
 
     // Mail Receive handler
