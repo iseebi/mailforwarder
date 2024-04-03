@@ -66,6 +66,13 @@ export class PackagesStack extends Stack {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
     });
     forwardingTable.grantReadWriteData(functionRole);
+    forwardingTable.addGlobalSecondaryIndex({
+      indexName: "forwardingStatusIndex",
+      partitionKey: { name: "status", type: ddb.AttributeType.STRING },
+      sortKey: {
+        name: "createdAt", type: ddb.AttributeType.NUMBER
+      },
+    })
     const tableNameEnvironments = {
       DDB_FORWARDING_TABLE_NAME: forwardingTable.tableName,
       DDB_MAPPING_TABLE_NAME: accountMappingsTable.tableName,
