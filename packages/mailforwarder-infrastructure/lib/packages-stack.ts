@@ -8,6 +8,7 @@ import * as sesActions from "aws-cdk-lib/aws-ses-actions";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import * as ddb from "aws-cdk-lib/aws-dynamodb";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 
 interface PackageStackProps {
@@ -31,6 +32,7 @@ export class PackagesStack extends Stack {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"),
+        iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"),
       ],
     })
 
@@ -109,6 +111,33 @@ export class PackagesStack extends Stack {
       ]
     });
 
+    // vpc
+    const vpc = new ec2.Vpc(this, "MailForwarderVPC", {
+      natGateways: 0,
+      maxAzs: 2,
+      subnetConfiguration: [
+        {
+          name: "private",
+          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+        }
+      ],
+      ipProtocol: ec2.IpProtocol.DUAL_STACK,
+      enableDnsHostnames: true,
+      enableDnsSupport: true,
+    });
+    vpc.addGatewayEndpoint("S3Gateway", {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+    });
+    vpc.addGatewayEndpoint("DynamoDBGateway", {
+      service: ec2.GatewayVpcEndpointAwsService.DYNAMODB,
+    });
+
+    const securityGroup = new ec2.SecurityGroup(this, "MailForwarderSecurityGroup", {
+      vpc,
+      allowAllOutbound: true,
+      allowAllIpv6Outbound: true,
+    });
+
     // lambda environment
     const environment = {
       ...tableNameEnvironments,
@@ -140,7 +169,10 @@ export class PackagesStack extends Stack {
       environment,
       role: functionRole,
       handler: "index.forwardMailTopicHandler",
-      timeout: Duration.seconds(20)
+      timeout: Duration.seconds(20),
+      vpc,
+      securityGroups: [securityGroup],
+      ipv6AllowedForDualStack: true,
     });
     forwardMailFunction.addPermission("ForwardMailQueueFunctionPermission", {
       principal: new iam.ServicePrincipal("sqs.amazonaws.com"),
