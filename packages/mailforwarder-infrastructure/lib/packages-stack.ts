@@ -113,7 +113,7 @@ export class PackagesStack extends Stack {
 
     // Mail Receive handler
     const receiveMailFunction = new lambda.Function(this, "ReceiveMailHandler", {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       code,
       environment,
       role: functionRole,
@@ -128,7 +128,7 @@ export class PackagesStack extends Stack {
 
     // forwarding queue handler
     const forwardMailFunction = new lambda.Function(this, "ForwardMailHandler", {
-      runtime: lambda.Runtime.NODEJS_18_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       code,
       environment,
       role: functionRole,
