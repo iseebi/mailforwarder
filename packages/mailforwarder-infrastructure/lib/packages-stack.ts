@@ -66,6 +66,13 @@ export class PackagesStack extends Stack {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
     });
     forwardingTable.grantReadWriteData(functionRole);
+    forwardingTable.addGlobalSecondaryIndex({
+      indexName: "forwardingStatusIndex",
+      partitionKey: { name: "status", type: ddb.AttributeType.STRING },
+      sortKey: {
+        name: "createdAt", type: ddb.AttributeType.NUMBER
+      },
+    })
     const tableNameEnvironments = {
       DDB_FORWARDING_TABLE_NAME: forwardingTable.tableName,
       DDB_MAPPING_TABLE_NAME: accountMappingsTable.tableName,
@@ -106,14 +113,14 @@ export class PackagesStack extends Stack {
     const environment = {
       ...tableNameEnvironments,
       ...queueNameEnvironments,
-      RECIEVE_BUCKET_NAME: receiveBucket.bucketName,
+      RECEIVE_BUCKET_NAME: receiveBucket.bucketName,
       MAIL_RECEIVER_URL: mailReceiverUrl,
-      MAIL_RECEIVER_AUTH: mailReceiverAuthorization
+      MAIL_RECEIVER_AUTH: mailReceiverAuthorization,
     };
 
     // Mail Receive handler
     const receiveMailFunction = new lambda.Function(this, "ReceiveMailHandler", {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       code,
       environment,
       role: functionRole,
@@ -128,11 +135,12 @@ export class PackagesStack extends Stack {
 
     // forwarding queue handler
     const forwardMailFunction = new lambda.Function(this, "ForwardMailHandler", {
-      runtime: lambda.Runtime.NODEJS_14_X,
+      runtime: lambda.Runtime.NODEJS_20_X,
       code,
       environment,
       role: functionRole,
-      handler: "index.forwardMailTopicHandler"
+      handler: "index.forwardMailTopicHandler",
+      timeout: Duration.seconds(20)
     });
     forwardMailFunction.addPermission("ForwardMailQueueFunctionPermission", {
       principal: new iam.ServicePrincipal("sqs.amazonaws.com"),
