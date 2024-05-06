@@ -1,6 +1,7 @@
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
 export interface IDatabaseObject<T> {
+  // FIXME: itemがundefinedになることがある(undefinedにならないように、戻り値がIDatabaseObject<T>?になるようにする等の対策をする)
   item: T;
   oldItem?: T;
 }

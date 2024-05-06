@@ -4,11 +4,12 @@ export const ForwardingStatus = {
   Received: "received",
   Completed: "completed",
   Failed: "failed",
+  Dropped: "dropped",
 };
 export type ForwardingStatus = typeof ForwardingStatus[keyof typeof ForwardingStatus];
 
 export interface Forwarding {
-  forwardingId: string;
+  forwardingId: string;  // ${objectKey}/${mappingKey}
   createdAt: number;
   forwardedAt?: number;
   objectKey: string;
@@ -30,4 +31,11 @@ export interface Account {
   accountId: string;
   createdAt: number;
   accountEmail: string;
+}
+
+export interface DropConfig {
+  dropConfigId: string; // ${accountId}/${dropAddress}
+  accountId: string;
+  dropAddress: string;
+  createdAt: number;
 }

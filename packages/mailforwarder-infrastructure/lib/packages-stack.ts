@@ -75,10 +75,26 @@ export class PackagesStack extends Stack {
         name: "createdAt", type: ddb.AttributeType.NUMBER
       },
     })
+    const dropConfigsTable = new ddb.Table(this, "DropConfigsTable", {
+      partitionKey: {
+        name: "dropConfigId",
+        type: ddb.AttributeType.STRING
+      },
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+    });
+    dropConfigsTable.grantReadWriteData(functionRole);
+    dropConfigsTable.addGlobalSecondaryIndex({
+      indexName: "dropConfigAccountIndex",
+      partitionKey: { name: "accountId", type: ddb.AttributeType.STRING },
+      sortKey: {
+        name: "createdAt", type: ddb.AttributeType.NUMBER
+      },
+    })
     const tableNameEnvironments = {
       DDB_FORWARDING_TABLE_NAME: forwardingTable.tableName,
       DDB_MAPPING_TABLE_NAME: accountMappingsTable.tableName,
       DDB_ACCOUNTS_TABLE_NAME: accountsTable.tableName,
+      DDB_DROP_CONFIGS_TABLE_NAME: dropConfigsTable.tableName,
     };
 
     // queue

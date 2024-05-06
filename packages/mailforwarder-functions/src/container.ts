@@ -71,6 +71,7 @@ class AppContainer {
       this.accountsRepository = new AccountsRepositoryImplementation(
         this.getDynamoDbDatastore(),
         constants.tables.accountsTableName,
+        constants.tables.dropConfigsTableName,
       );
     }
     return this.accountsRepository;
