@@ -34,7 +34,7 @@ class ForwardingUseCaseImplementation implements ForwardingUseCase {
 
     // Drop
     const drop = await this.accountsRepository.isDropAsync(account.accountId, forwarding.recipient);
-    if (drop) {
+    if (drop === true) {
       console.info(`[${inputForwarding.forwardingId}] drop`);
       await this.forwardingRepository.markDroppedAsync(forwarding.forwardingId);
       return;

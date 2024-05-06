@@ -27,10 +27,10 @@ class AccountsRepositoryImplementation implements AccountsRepository {
 
   public async isDropAsync(accountId: string, recipient: string): Promise<boolean | undefined> {
     try {
-      await this.dynamoDb.getItemAsync<DropConfig>(this.dropConfigsTableName, {
+      const item = await this.dynamoDb.getItemAsync<DropConfig>(this.dropConfigsTableName, {
         dropConfigId: `${accountId}/${recipient}`,
       });
-      return true;
+      return item.item !== undefined;
     } catch {
       // TODO: Not Found のときはfalse、それ以外はundefinedを返す
       return false;

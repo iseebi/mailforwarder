@@ -107,7 +107,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
 
   public async markDroppedAsync(forwardingId: string): Promise<void> {
     try {
-      console.warn(`[${forwardingId}] mark failed`);
+      console.warn(`[${forwardingId}] mark dropped`);
       await this.dynamoDb.updateItemAsync<Forwarding>(
         this.forwardingTableName,
         { forwardingId },
