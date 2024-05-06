@@ -104,6 +104,28 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
       // nop
     }
   }
+
+  public async markDroppedAsync(forwardingId: string): Promise<void> {
+    try {
+      console.warn(`[${forwardingId}] mark dropped`);
+      await this.dynamoDb.updateItemAsync<Forwarding>(
+        this.forwardingTableName,
+        { forwardingId },
+        {},
+        {
+          UpdateExpression: "set #status = :status",
+          ExpressionAttributeNames: {
+            "#status": "status",
+          },
+          ExpressionAttributeValues: {
+            ":status": ForwardingStatus.Dropped,
+          },
+        },
+      );
+    } catch {
+      // nop
+    }
+  }
 }
 
 export default ForwardingRepositoryImplementation;
