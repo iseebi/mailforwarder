@@ -33,7 +33,7 @@ class ReceiveUseCaseImplementation implements ReceiveUseCase {
   }
 
   private async processReceiveMessage(message: SESMessage, recipient: string): Promise<void> {
-    const match = /^([^@+]*)(?:\+[^@]+)?@(.*)$/.exec(recipient);
+    const match = /^([^@+]*)(?:\+[^@]+)?@(.*)$/.exec(recipient.toLowerCase());
     if (!match) {
       console.warn(`[${message.mail.messageId}/${recipient}]: invalid recipient format`);
       return;
