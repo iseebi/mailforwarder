@@ -1,5 +1,5 @@
 var webpack = require("webpack");
-var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
+// var HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -21,7 +21,7 @@ module.exports = {
     new webpack.DefinePlugin({
       C3_VERSION: JSON.stringify(require("./package.json").version),
     }),
-    new HardSourceWebpackPlugin(),
+    // new HardSourceWebpackPlugin(),
   ],
   resolve: {
     modules: [
