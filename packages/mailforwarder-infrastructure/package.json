@@ -1,6 +1,6 @@
 {
   "name": "packages",
-  "version": "0.1.0",
+  "version": "0.3.2",
   "bin": {
     "packages": "bin/packages.js"
   },
@@ -13,8 +13,8 @@
     "deploy-ci": "tsc && cdk deploy --require-approval never"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.10",
-    "@types/node": "10.17.27",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^10.17.27",
     "aws-cdk": "2.126.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
@@ -24,7 +24,7 @@
   "dependencies": {
     "aws-cdk-lib": "2.135.0",
     "constructs": "^10.0.0",
-    "mailforwarder-functions": "^0.1.0",
+    "mailforwarder-functions": "*",
     "source-map-support": "^0.5.16"
   }
 }
