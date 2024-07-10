@@ -13,6 +13,6 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "lerna": "^4.0.0"
+    "lerna": "^8.1.6"
   }
 }
