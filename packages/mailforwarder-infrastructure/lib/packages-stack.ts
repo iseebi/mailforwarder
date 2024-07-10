@@ -27,7 +27,7 @@ export class PackagesStack extends Stack {
     const mailReceiverAuthorization = props?.mailReceiverAuthorization || "";
 
     // Functions Set
-    const code = new lambda.AssetCode("node_modules/mailforwarder-functions/lib");
+    const code = new lambda.AssetCode("../mailforwarder-functions/lib");
     const functionRole = new iam.Role(this, "ForwarderFunctionsRole", {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       managedPolicies: [

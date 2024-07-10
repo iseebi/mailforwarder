@@ -2,7 +2,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import {
   DatabaseKey,
   DeleteItemInput,
-  DynamoDbDatastore,
+  DynamoDbDatastore, DynamoDbItem,
   GetItemInput,
   IDatabaseObject,
   PutItemInput,
@@ -17,7 +17,7 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     this.client = client;
   }
 
-  public async getItemAsync<T>(
+  public async getItemAsync<T extends DynamoDbItem>(
     tableName: string,
     key: DatabaseKey,
     options?: Partial<GetItemInput>,
@@ -32,7 +32,7 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     return { item: res.Item as T };
   }
 
-  public async putItemAsync<T>(
+  public async putItemAsync<T extends DynamoDbItem>(
     tableName: string,
     item: T,
     options?: Partial<PutItemInput>,
@@ -51,7 +51,7 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     };
   }
 
-  public async updateItemAsync<T>(
+  public async updateItemAsync<T extends DynamoDbItem>(
     tableName: string,
     key: DatabaseKey,
     item: Partial<T>,
@@ -75,7 +75,7 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     };
   }
 
-  public async deleteItemAsync<T>(
+  public async deleteItemAsync(
     tableName: string,
     key: DatabaseKey,
     options?: Partial<DeleteItemInput>,
@@ -89,7 +89,7 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
       .promise();
   }
 
-  public async queryItemAsync<T>(
+  public async queryItemAsync<T extends DynamoDbItem>(
     tableName: string,
     primaryKey?: DatabaseKey,
     options?: Partial<QueryInput>,
