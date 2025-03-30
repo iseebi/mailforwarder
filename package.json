@@ -4,14 +4,13 @@
   "description": "mail forwarding service with aws",
   "main": "index.js",
   "scripts": {
-    "build": "lerna run build",
-    "deploy-ci": "lerna run deploy-ci"
+    "build": "npm run build --workspaces",
+    "deploy-ci": "npm run deploy-ci --workspaces"
   },
   "author": "Nobuhiro Ito",
   "license": "ISC",
   "private": true,
   "dependencies": {
-    "lerna": "^8.1.6"
   },
   "workspaces": [
     "packages/*"
