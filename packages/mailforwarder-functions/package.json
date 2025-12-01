@@ -1,6 +1,6 @@
 {
   "name": "mailforwarder-functions",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "",
   "author": "",
   "homepage": "",
@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "webpack --mode=production",
+    "deploy-ci": "npm run build",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier --write --loglevel=warn 'src/**/*.{js,jsx,ts,tsx}'"
   },
