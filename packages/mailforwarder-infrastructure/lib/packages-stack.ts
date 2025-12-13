@@ -14,6 +14,8 @@ import { Construct } from "constructs";
 interface PackageStackProps {
   mailReceiverUrl: string;
   mailReceiverAuthorization: string;
+  mailReceiverGoogleWorkloadAuthorizationEnabled: string;
+  mailReceiverGoogleWorkloadCredentialConfig: string;
 }
 
 export class PackagesStack extends Stack {
@@ -25,6 +27,13 @@ export class PackagesStack extends Stack {
       throw new Error("MAIL_RECEIVER_URL Required.");
     }
     const mailReceiverAuthorization = props?.mailReceiverAuthorization || "";
+    const mailReceiverGoogleWorkloadAuthorizationEnabled = Boolean(props?.mailReceiverGoogleWorkloadAuthorizationEnabled);
+    const mailReceiverGoogleWorkloadCredentialConfig = props?.mailReceiverGoogleWorkloadCredentialConfig;
+    if (mailReceiverGoogleWorkloadAuthorizationEnabled) {
+      if (!mailReceiverGoogleWorkloadCredentialConfig) {
+        throw new Error("MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG Required when Google Authorization is enabled.");
+      }
+    }
 
     // Functions Set
     const code = new lambda.AssetCode("../mailforwarder-functions/lib");
@@ -161,6 +170,8 @@ export class PackagesStack extends Stack {
       RECEIVE_BUCKET_NAME: receiveBucket.bucketName,
       MAIL_RECEIVER_URL: mailReceiverUrl,
       MAIL_RECEIVER_AUTH: mailReceiverAuthorization,
+      MAIL_RECEIVER_GOOGLE_AUTHORIZATION_ENABLED: mailReceiverGoogleWorkloadAuthorizationEnabled ? "1" : "0",
+      MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG: mailReceiverGoogleWorkloadCredentialConfig,
     };
 
     // Mail Receive handler
