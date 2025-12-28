@@ -9,6 +9,7 @@ if (process.env.MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG && process.env.G
   require("fs").writeFileSync(
     configPath,
     process.env.MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG,
+    { mode: 0o600 },
   );
 }
 
