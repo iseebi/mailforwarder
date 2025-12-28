@@ -31,7 +31,7 @@ export class PackagesStack extends Stack {
     const mailReceiverAuthorization = props?.mailReceiverAuthorization || "";
     const mailReceiverAuthorizationHeader = props?.mailReceiverAuthorizationHeader || "";
     const mailReceiverGoogleWorkloadAuthorizationEnabled = Boolean(props?.mailReceiverGoogleWorkloadAuthorizationEnabled);
-    const mailReceiverGoogleWorkloadCredentialConfig = props?.mailReceiverGoogleWorkloadCredentialConfig;
+    const mailReceiverGoogleWorkloadCredentialConfig = props?.mailReceiverGoogleWorkloadCredentialConfig || "";
     if (mailReceiverGoogleWorkloadAuthorizationEnabled) {
       if (!mailReceiverGoogleWorkloadCredentialConfig) {
         throw new Error("MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG Required when Google Authorization is enabled.");
