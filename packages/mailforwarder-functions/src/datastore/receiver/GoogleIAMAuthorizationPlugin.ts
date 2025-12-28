@@ -6,10 +6,23 @@ class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlug
   private configured: boolean | undefined = undefined;
   private serviceAccountIdTokenUrl: string = "";
 
+  private cachedToken: { token: string; issuedAt: Date } | null = null;
+  private tokenExpiryDurationMs: number = 5 * 60 * 1000; // 5 minutes
+
   public async interceptRequestHeadersAsync(url: string, currentHeaders: Record<string, string>): Promise<Record<string, string>> {
     try {
       if (!await this.detectEnvironment()) {
         return currentHeaders;
+      }
+
+      if (this.cachedToken !== null) {
+        const now = new Date();
+        if (now.getTime() - this.cachedToken.issuedAt.getTime() < this.tokenExpiryDurationMs) {
+          return {
+            ...currentHeaders,
+            authorization: `Bearer ${this.cachedToken.token}`,
+          };
+        }
       }
 
       const auth = new GoogleAuth();
@@ -20,6 +33,8 @@ class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlug
         method: "POST",
         body: JSON.stringify({ audience, includeEmail: true }),
       });
+
+      this.cachedToken = { token: tokenFetchResult.data.token, issuedAt: new Date() };
 
       return {
         ...currentHeaders,

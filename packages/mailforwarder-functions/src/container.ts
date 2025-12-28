@@ -128,7 +128,6 @@ class AppContainer {
     const result: ReceiverDatastoreAuthorizationPlugin[] = [];
 
     if (constants.delivery.googleAuthorizationEnabled) {
-      console.info("Enable Google IAM Authorization Plugin");
       result.push(new GoogleIAMAuthorizationPlugin());
     }
 
