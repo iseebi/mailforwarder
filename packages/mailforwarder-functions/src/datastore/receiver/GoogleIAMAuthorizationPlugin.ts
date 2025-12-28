@@ -8,7 +8,7 @@ class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlug
 
   public async interceptRequestHeadersAsync(url: string, currentHeaders: Record<string, string>): Promise<Record<string, string>> {
     try {
-      if (await this.detectEnvironment()) {
+      if (!await this.detectEnvironment()) {
         return currentHeaders;
       }
 

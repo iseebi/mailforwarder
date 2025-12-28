@@ -2,12 +2,14 @@ import { ReceiverDatastore, ReceiverDatastoreAuthorizationPlugin } from "./inter
 
 class ReceiverDatastoreImplementation implements ReceiverDatastore {
   private readonly deliverUrl: string;
+  private readonly authorizationHeader: string;
   private readonly authorization: string;
   private readonly plugins: ReceiverDatastoreAuthorizationPlugin[];
 
-  public constructor(deliverUrl: string, authorization: string, plugins: ReceiverDatastoreAuthorizationPlugin[]) {
+  public constructor(deliverUrl: string, authorization: string, authorizationHeader: string, plugins: ReceiverDatastoreAuthorizationPlugin[]) {
     this.deliverUrl = deliverUrl;
     this.authorization = authorization;
+    this.authorizationHeader = authorizationHeader;
     this.plugins = plugins;
   }
 
@@ -18,8 +20,16 @@ class ReceiverDatastoreImplementation implements ReceiverDatastore {
     for (const plugin of this.plugins) {
       headers = await plugin.interceptRequestHeadersAsync(this.deliverUrl, headers);
     }
-    if (!headers.authorization) {
-      headers.authorization = this.authorization;
+
+    // 認証をセットする
+    // - authorizationHeader が指定されている場合はそのヘッダー名でセット
+    // - 指定されていない場合は standard な Authorization ヘッダーでセット（ただし既にセットされていない場合のみ）
+    if (this.authorization) {
+      if (this.authorizationHeader) {
+        headers[this.authorizationHeader] = this.authorization;
+      } else if (!headers.authorization) {
+        headers.authorization = this.authorization;
+      }
     }
 
     body.append("mail", dataBlob, "mail.eml");

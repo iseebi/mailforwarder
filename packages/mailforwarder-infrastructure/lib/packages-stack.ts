@@ -15,6 +15,7 @@ import { Construct } from "constructs";
 interface PackageStackProps {
   mailReceiverUrl: string;
   mailReceiverAuthorization: string;
+  mailReceiverAuthorizationHeader: string;
   mailReceiverGoogleWorkloadAuthorizationEnabled: string;
   mailReceiverGoogleWorkloadCredentialConfig: string;
 }
@@ -28,6 +29,7 @@ export class PackagesStack extends Stack {
       throw new Error("MAIL_RECEIVER_URL Required.");
     }
     const mailReceiverAuthorization = props?.mailReceiverAuthorization || "";
+    const mailReceiverAuthorizationHeader = props?.mailReceiverAuthorizationHeader || "";
     const mailReceiverGoogleWorkloadAuthorizationEnabled = Boolean(props?.mailReceiverGoogleWorkloadAuthorizationEnabled);
     const mailReceiverGoogleWorkloadCredentialConfig = props?.mailReceiverGoogleWorkloadCredentialConfig;
     if (mailReceiverGoogleWorkloadAuthorizationEnabled) {
@@ -171,6 +173,7 @@ export class PackagesStack extends Stack {
       RECEIVE_BUCKET_NAME: receiveBucket.bucketName,
       MAIL_RECEIVER_URL: mailReceiverUrl,
       MAIL_RECEIVER_AUTH: mailReceiverAuthorization,
+      MAIL_RECEIVER_AUTH_HEADER: mailReceiverAuthorizationHeader,
       MAIL_RECEIVER_GOOGLE_AUTHORIZATION_ENABLED: mailReceiverGoogleWorkloadAuthorizationEnabled ? "1" : "0",
       MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG: mailReceiverGoogleWorkloadCredentialConfig,
       GOOGLE_APPLICATION_CREDENTIALS: mailReceiverGoogleWorkloadCredentialConfig ? "/tmp/google-application-credentials.json" : "",

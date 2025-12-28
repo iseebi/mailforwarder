@@ -117,6 +117,7 @@ class AppContainer {
       this.receiverDatastore = new ReceiverDatastoreImplementation(
         constants.delivery.url,
         constants.delivery.authorization,
+        constants.delivery.authorizationHeader,
         this.receiverDatastorePlugins(),
       );
     }
@@ -127,6 +128,7 @@ class AppContainer {
     const result: ReceiverDatastoreAuthorizationPlugin[] = [];
 
     if (constants.delivery.googleAuthorizationEnabled) {
+      console.info("Enable Google IAM Authorization Plugin");
       result.push(new GoogleIAMAuthorizationPlugin());
     }
 

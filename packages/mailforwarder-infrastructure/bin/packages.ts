@@ -7,6 +7,7 @@ const app = new cdk.App();
 new PackagesStack(app, 'MailForwarderStack', {
   mailReceiverUrl: process.env.MAIL_RECEIVER_URL || "",
   mailReceiverAuthorization: process.env.MAIL_RECEIVER_AUTH || "",
+  mailReceiverAuthorizationHeader: process.env.MAIL_RECEIVER_AUTH_HEADER || "",
   mailReceiverGoogleWorkloadAuthorizationEnabled: process.env.MAIL_RECEIVER_GOOGLE_AUTHORIZATION_ENABLED || "",
   mailReceiverGoogleWorkloadCredentialConfig: process.env.MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG || "",
 
