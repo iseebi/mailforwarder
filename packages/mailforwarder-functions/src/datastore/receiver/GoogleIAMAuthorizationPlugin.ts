@@ -10,44 +10,51 @@ class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlug
   private tokenExpiryDurationMs: number = 5 * 60 * 1000; // 5 minutes
 
   public async interceptRequestHeadersAsync(url: string, currentHeaders: Record<string, string>): Promise<Record<string, string>> {
+    if (!(await this.detectEnvironment())) {
+      return currentHeaders;
+    }
+
+    if (this.cachedToken !== null) {
+      const now = new Date();
+      if (now.getTime() - this.cachedToken.issuedAt.getTime() < this.tokenExpiryDurationMs) {
+        return {
+          ...currentHeaders,
+          authorization: `Bearer ${this.cachedToken.token}`,
+        };
+      }
+    }
+
+    const token = await this.fetchToken(url);
+    this.cachedToken = { token, issuedAt: new Date() };
+
+    return {
+      ...currentHeaders,
+      authorization: `Bearer ${token}`,
+    };
+  }
+
+  private async fetchToken(url: string): Promise<string> {
+    const audience = new URL(url).origin;
     try {
-      if (!await this.detectEnvironment()) {
-        return currentHeaders;
-      }
-
-      if (this.cachedToken !== null) {
-        const now = new Date();
-        if (now.getTime() - this.cachedToken.issuedAt.getTime() < this.tokenExpiryDurationMs) {
-          return {
-            ...currentHeaders,
-            authorization: `Bearer ${this.cachedToken.token}`,
-          };
-        }
-      }
-
       const auth = new GoogleAuth();
-
-      const audience = new URL(url).origin;
       const authClient = await auth.getClient();
       const tokenFetchResult = await authClient.fetch<{ token: string }>(this.serviceAccountIdTokenUrl, {
         method: "POST",
         body: JSON.stringify({ audience, includeEmail: true }),
       });
 
-      this.cachedToken = { token: tokenFetchResult.data.token, issuedAt: new Date() };
-
-      return {
-        ...currentHeaders,
-        authorization: `Bearer ${tokenFetchResult.data.token}`,
-      };
-    } catch (error) {
-      throw error;
+      return tokenFetchResult.data.token;
+    } catch (err) {
+      const originalMessage = err instanceof Error ? err.message : String(err);
+      throw new Error(
+        `Failed to generate ID token via "${this.serviceAccountIdTokenUrl}" for audience "${audience}" when accessing "${url}": ${originalMessage}`
+      );
     }
   }
 
   private async detectEnvironment(): Promise<boolean> {
     if (this.configured !== undefined) {
-      return this.configured ?? false;
+      return this.configured;
     }
 
     try {
