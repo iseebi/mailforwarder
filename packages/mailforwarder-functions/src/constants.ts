@@ -11,6 +11,7 @@ const constants = {
   delivery: {
     url: process.env.MAIL_RECEIVER_URL || "",
     authorization: process.env.MAIL_RECEIVER_AUTH || "",
+    googleAuthorizationEnabled: Boolean(process.env.MAIL_RECEIVER_GOOGLE_AUTHORIZATION_ENABLED),
   },
   receiveBucketName: process.env.RECEIVE_BUCKET_NAME || "",
 };

@@ -126,7 +126,7 @@ class AppContainer {
   private receiverDatastorePlugins(): ReceiverDatastoreAuthorizationPlugin[] {
     const result: ReceiverDatastoreAuthorizationPlugin[] = [];
 
-    if (process.env.MAIL_RECEIVER_GOOGLE_AUTHORIZATION_ENABLED) {
+    if (constants.delivery.googleAuthorizationEnabled) {
       result.push(new GoogleIAMAuthorizationPlugin());
     }
 
