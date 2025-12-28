@@ -4,6 +4,15 @@ import { Forwarding } from "./models";
 
 const container = new AppContainer();
 
+if (process.env.MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG && process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  const configPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  require("fs").writeFileSync(
+    configPath,
+    process.env.MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG,
+  );
+}
+
+
 export const receiveMailTopicHandler = (event: SNSEvent, context: Context, callback: Callback) => {
   Promise.all(
     event.Records.map(async (e) => {
