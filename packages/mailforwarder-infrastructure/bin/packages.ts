@@ -6,8 +6,11 @@ import { PackagesStack } from '../lib/packages-stack';
 const app = new cdk.App();
 new PackagesStack(app, 'MailForwarderStack', {
   mailReceiverUrl: process.env.MAIL_RECEIVER_URL || "",
-  mailReceiverAuthorization: process.env.MAIL_RECEIVER_AUTH || ""
-  
+  mailReceiverAuthorization: process.env.MAIL_RECEIVER_AUTH || "",
+  mailReceiverAuthorizationHeader: process.env.MAIL_RECEIVER_AUTH_HEADER || "",
+  mailReceiverGoogleWorkloadAuthorizationEnabled: process.env.MAIL_RECEIVER_GOOGLE_AUTHORIZATION_ENABLED || "",
+  mailReceiverGoogleWorkloadCredentialConfig: process.env.MAIL_RECEIVER_GOOGLE_WORKLOAD_CREDENTIAL_CONFIG || "",
+
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
