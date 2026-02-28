@@ -5,7 +5,7 @@ import { DynamoDbDatastore } from "./datastore/dynamodb";
 import DynamoDbDatastoreImplementation from "./datastore/dynamodb/implements";
 import { QueueDatastore } from "./datastore/queue";
 import QueueDatastoreImplementation from "./datastore/queue/implements";
-import { ReceiverDatastore } from "./datastore/receiver";
+import { ReceiverDatastore, ReceiverDatastoreAuthorizationPlugin } from "./datastore/receiver";
 import ReceiverDatastoreImplementation from "./datastore/receiver/implements";
 import { StorageDatastore } from "./datastore/storage";
 import StorageDatastoreImplementation from "./datastore/storage/implements";
@@ -19,6 +19,7 @@ import ForwardingUseCaseImplementation from "./usecases/forwarding/implements";
 import { ForwardingUseCase } from "./usecases/forwarding/interface";
 import { ReceiveUseCase } from "./usecases/receive";
 import ReceiveUseCaseImplementation from "./usecases/receive/implements";
+import GoogleIAMAuthorizationPlugin from "./datastore/receiver/GoogleIAMAuthorizationPlugin";
 
 class AppContainer {
   private receiveUseCase?: ReceiveUseCase;
@@ -116,9 +117,21 @@ class AppContainer {
       this.receiverDatastore = new ReceiverDatastoreImplementation(
         constants.delivery.url,
         constants.delivery.authorization,
+        constants.delivery.authorizationHeader,
+        this.receiverDatastorePlugins(),
       );
     }
     return this.receiverDatastore;
+  }
+
+  private receiverDatastorePlugins(): ReceiverDatastoreAuthorizationPlugin[] {
+    const result: ReceiverDatastoreAuthorizationPlugin[] = [];
+
+    if (constants.delivery.googleAuthorizationEnabled) {
+      result.push(new GoogleIAMAuthorizationPlugin());
+    }
+
+    return result;
   }
 }
 

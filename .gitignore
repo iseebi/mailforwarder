@@ -1,4 +1,5 @@
 node_modules/
 .envrc
+.env*
 deploy*.sh
 .idea/
