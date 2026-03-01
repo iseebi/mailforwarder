@@ -5,7 +5,7 @@ import { MappingsRepository } from "../../repositories/mappings";
 import { ReceiveUseCase } from "./interface";
 
 const sesToForwarding = (message: SESMessage, recipient: string, mapping: AccountMapping): Forwarding => {
-  const objectKey = (message.receipt.action as SESReceiptS3Action).objectKey;
+  const { objectKey } = message.receipt.action as SESReceiptS3Action;
   return {
     forwardingId: `${objectKey}/${mapping.mappingKey}`,
     accountId: mapping.accountId,

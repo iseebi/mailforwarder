@@ -1,5 +1,5 @@
 import { DynamoDbDatastore } from "../../datastore/dynamodb";
-import {Account, DropConfig} from "../../models";
+import { Account, DropConfig } from "../../models";
 import { AccountsRepository } from "./interface";
 
 class AccountsRepositoryImplementation implements AccountsRepository {
@@ -17,7 +17,7 @@ class AccountsRepositoryImplementation implements AccountsRepository {
     try {
       return (
         await this.dynamoDb.getItemAsync<Account>(this.accountsTableName, {
-          accountId: accountId,
+          accountId,
         })
       ).item;
     } catch {

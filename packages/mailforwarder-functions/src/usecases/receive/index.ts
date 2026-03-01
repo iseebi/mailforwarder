@@ -1,2 +1,4 @@
+import ReceiveUseCaseImplementation from "./implements";
+
 export * from "./interface";
-export * from "./implements";
+export { ReceiveUseCaseImplementation };

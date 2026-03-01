@@ -1,2 +1,4 @@
+import ReceiverDatastoreImplementation from "./implements";
+
 export * from "./interface";
-export * from "./implements";
+export { ReceiverDatastoreImplementation };

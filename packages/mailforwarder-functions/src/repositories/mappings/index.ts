@@ -1,2 +1,4 @@
+import MappingsRepositoryImplementation from "./implements";
+
 export * from "./interface";
-export * from "./implements";
+export { MappingsRepositoryImplementation };

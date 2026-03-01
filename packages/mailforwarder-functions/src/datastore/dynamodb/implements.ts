@@ -1,8 +1,17 @@
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+  UpdateCommand,
+  DeleteCommand,
+  QueryCommand,
+} from "@aws-sdk/lib-dynamodb";
 import {
   DatabaseKey,
   DeleteItemInput,
-  DynamoDbDatastore, DynamoDbItem,
+  DynamoDbDatastore,
+  DynamoDbItem,
+  DynamoDbValue,
   GetItemInput,
   IDatabaseObject,
   PutItemInput,
@@ -11,9 +20,9 @@ import {
 } from "./interface";
 
 class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
-  private client: DocumentClient;
+  private client: DynamoDBDocumentClient;
 
-  public constructor(client: DocumentClient) {
+  public constructor(client: DynamoDBDocumentClient) {
     this.client = client;
   }
 
@@ -22,15 +31,13 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     key: DatabaseKey,
     options?: Partial<GetItemInput>,
   ): Promise<IDatabaseObject<T>> {
-    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
-    // If yes, please remove .promise(). If not, remove this comment.
-    this.client
-      .get({
+    const res = await this.client.send(
+      new GetCommand({
         ...options,
         Key: key,
         TableName: tableName,
-      })
-      .promise();
+      }),
+    );
     return { item: res.Item as T };
   }
 
@@ -39,15 +46,13 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     item: T,
     options?: Partial<PutItemInput>,
   ): Promise<IDatabaseObject<T>> {
-    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
-    // If yes, please remove .promise(). If not, remove this comment.
-    this.client
-      .put({
+    const res = await this.client.send(
+      new PutCommand({
         ...options,
         Item: item,
         TableName: tableName,
-      })
-      .promise();
+      }),
+    );
 
     return {
       item,
@@ -58,19 +63,16 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
   public async updateItemAsync<T extends DynamoDbItem>(
     tableName: string,
     key: DatabaseKey,
-    item: Partial<T>,
     options?: Partial<UpdateItemInput>,
   ): Promise<IDatabaseObject<T>> {
-    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
-    // If yes, please remove .promise(). If not, remove this comment.
-    this.client
-      .update({
+    const res = await this.client.send(
+      new UpdateCommand({
         ...options,
         Key: key,
         ReturnValues: "ALL_NEW",
         TableName: tableName,
-      })
-      .promise();
+      }),
+    );
 
     if (!res.Attributes) {
       throw new Error("Attributes must not be null");
@@ -81,20 +83,14 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     };
   }
 
-  public async deleteItemAsync(
-    tableName: string,
-    key: DatabaseKey,
-    options?: Partial<DeleteItemInput>,
-  ): Promise<void> {
-    await // The `.promise()` call might be on an JS SDK v2 client API.
-    // If yes, please remove .promise(). If not, remove this comment.
-    this.client
-      .delete({
+  public async deleteItemAsync(tableName: string, key: DatabaseKey, options?: Partial<DeleteItemInput>): Promise<void> {
+    await this.client.send(
+      new DeleteCommand({
         ...options,
         Key: key,
         TableName: tableName,
-      })
-      .promise();
+      }),
+    );
   }
 
   public async queryItemAsync<T extends DynamoDbItem>(
@@ -109,25 +105,40 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
           TableName: tableName,
         };
       }
-      const KeyConditions: DocumentClient.KeyConditions = Object.entries(primaryKey).reduce((p, [key, value]) => {
-        return {
+      const keyExpressionNames = Object.keys(primaryKey).reduce<Record<string, string>>(
+        (p, key) => ({
           ...p,
-          [key]: {
-            AttributeValueList: [value],
-            ComparisonOperator: "EQ",
-          },
-        };
-      }, {});
+          [`#${key}`]: key,
+        }),
+        {},
+      );
+      const keyExpressionValues = Object.entries(primaryKey).reduce<Record<string, DynamoDbValue>>(
+        (p, [key, value]) => ({
+          ...p,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          [`:${key}`]: value,
+        }),
+        {} as Record<string, DynamoDbValue>,
+      );
+      const keyConditionExpression = Object.keys(primaryKey)
+        .map((key) => `#${key} = :${key}`)
+        .join(" AND ");
       return {
         ...options,
-        KeyConditions,
+        ExpressionAttributeNames: {
+          ...keyExpressionNames,
+          ...(options?.ExpressionAttributeNames || {}),
+        },
+        ExpressionAttributeValues: {
+          ...keyExpressionValues,
+          ...(options?.ExpressionAttributeValues || {}),
+        },
+        KeyConditionExpression: keyConditionExpression,
         TableName: tableName,
       };
     })();
 
-    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
-    // If yes, please remove .promise(). If not, remove this comment.
-    this.client.query(params).promise();
+    const res = await this.client.send(new QueryCommand(params));
     return (res.Items || []).map((i) => ({ item: i as T }));
   }
 }

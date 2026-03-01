@@ -57,7 +57,7 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
       await this.markCompletedAsync(forwarding.forwardingId);
       return true;
     } catch (e) {
-      console.error(`[${forwarding.forwardingId}] API call failed ${e}`);
+      console.error(`[${forwarding.forwardingId}] API call failed`, e);
       await this.markFailedAsync(forwarding.forwardingId);
       return false;
     }
@@ -68,7 +68,6 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
     await this.dynamoDb.updateItemAsync<Forwarding>(
       this.forwardingTableName,
       { forwardingId },
-      {},
       {
         UpdateExpression: "set #status = :status, #forwardedAt = :forwardedAt",
         ExpressionAttributeNames: {
@@ -89,7 +88,6 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
       await this.dynamoDb.updateItemAsync<Forwarding>(
         this.forwardingTableName,
         { forwardingId },
-        {},
         {
           UpdateExpression: "set #status = :status",
           ExpressionAttributeNames: {
@@ -111,7 +109,6 @@ class ForwardingRepositoryImplementation implements ForwardingRepository {
       await this.dynamoDb.updateItemAsync<Forwarding>(
         this.forwardingTableName,
         { forwardingId },
-        {},
         {
           UpdateExpression: "set #status = :status",
           ExpressionAttributeNames: {

@@ -1,6 +1,7 @@
 import { S3 } from "@aws-sdk/client-s3";
 import { SQS } from "@aws-sdk/client-sqs";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import constants from "./constants";
 import { DynamoDbDatastore } from "./datastore/dynamodb";
 import DynamoDbDatastoreImplementation from "./datastore/dynamodb/implements";
@@ -91,7 +92,8 @@ class AppContainer {
 
   public getDynamoDbDatastore(): DynamoDbDatastore {
     if (!this.dynamoDbDatastore) {
-      const documentClient = new DocumentClient();
+      const baseClient = new DynamoDB();
+      const documentClient = DynamoDBDocumentClient.from(baseClient);
       this.dynamoDbDatastore = new DynamoDbDatastoreImplementation(documentClient);
     }
     return this.dynamoDbDatastore;
