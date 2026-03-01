@@ -18,9 +18,7 @@ class ReceiverDatastoreImplementation implements ReceiverDatastore {
     let headers: Record<string, string> = {};
 
     // 順序保証が必要なため
-    // eslint-disable-next-line no-restricted-syntax
     for (const plugin of this.plugins) {
-      // eslint-disable-next-line no-await-in-loop
       headers = await plugin.interceptRequestHeadersAsync(this.deliverUrl, headers);
     }
 
