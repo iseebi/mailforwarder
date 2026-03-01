@@ -19,7 +19,7 @@ class StorageDatastoreImplementation implements StorageDatastore {
 
   public async getObjectBinaryBlobAsync(bucketName: string, key: string): Promise<Blob> {
     const result = await this.getObjectBinaryAsync(bucketName, key);
-    return new Blob([result]);
+    return new Blob([new Uint8Array(result)]);
   }
 }
 export default StorageDatastoreImplementation;
