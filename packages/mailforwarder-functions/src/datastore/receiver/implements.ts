@@ -17,6 +17,7 @@ class ReceiverDatastoreImplementation implements ReceiverDatastore {
     const body = new FormData();
     let headers: Record<string, string> = {};
 
+    // 順序保証が必要なため
     for (const plugin of this.plugins) {
       headers = await plugin.interceptRequestHeadersAsync(this.deliverUrl, headers);
     }

@@ -1,2 +1,4 @@
+import DynamoDbDatastoreImplementation from "./implements";
+
 export * from "./interface";
-export * from "./implements";
+export { DynamoDbDatastoreImplementation };

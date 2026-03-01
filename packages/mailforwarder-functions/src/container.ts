@@ -1,25 +1,18 @@
-import { S3, SQS } from "aws-sdk";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { S3 } from "@aws-sdk/client-s3";
+import { SQS } from "@aws-sdk/client-sqs";
+import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import constants from "./constants";
-import { DynamoDbDatastore } from "./datastore/dynamodb";
-import DynamoDbDatastoreImplementation from "./datastore/dynamodb/implements";
-import { QueueDatastore } from "./datastore/queue";
-import QueueDatastoreImplementation from "./datastore/queue/implements";
-import { ReceiverDatastore, ReceiverDatastoreAuthorizationPlugin } from "./datastore/receiver";
-import ReceiverDatastoreImplementation from "./datastore/receiver/implements";
-import { StorageDatastore } from "./datastore/storage";
-import StorageDatastoreImplementation from "./datastore/storage/implements";
-import { AccountsRepository } from "./repositories/accounts";
-import AccountsRepositoryImplementation from "./repositories/accounts/implements";
-import { ForwardingRepository } from "./repositories/forwarding";
-import ForwardingRepositoryImplementation from "./repositories/forwarding/implements";
-import { MappingsRepository } from "./repositories/mappings";
-import MappingsRepositoryImplementation from "./repositories/mappings/implements";
-import ForwardingUseCaseImplementation from "./usecases/forwarding/implements";
-import { ForwardingUseCase } from "./usecases/forwarding/interface";
-import { ReceiveUseCase } from "./usecases/receive";
-import ReceiveUseCaseImplementation from "./usecases/receive/implements";
+import { DynamoDbDatastore, DynamoDbDatastoreImplementation } from "./datastore/dynamodb";
+import { QueueDatastore, QueueDatastoreImplementation } from "./datastore/queue";
+import { ReceiverDatastore, ReceiverDatastoreAuthorizationPlugin, ReceiverDatastoreImplementation } from "./datastore/receiver";
+import { StorageDatastore, StorageDatastoreImplementation } from "./datastore/storage";
+import { AccountsRepository, AccountsRepositoryImplementation } from "./repositories/accounts";
+import { ForwardingRepository, ForwardingRepositoryImplementation } from "./repositories/forwarding";
+import { MappingsRepository, MappingsRepositoryImplementation } from "./repositories/mappings";
+import { ReceiveUseCase, ReceiveUseCaseImplementation } from "./usecases/receive";
 import GoogleIAMAuthorizationPlugin from "./datastore/receiver/GoogleIAMAuthorizationPlugin";
+import { ForwardingUseCase, ForwardingUseCaseImplementation } from "./usecases/forwarding";
 
 class AppContainer {
   private receiveUseCase?: ReceiveUseCase;
@@ -90,7 +83,8 @@ class AppContainer {
 
   public getDynamoDbDatastore(): DynamoDbDatastore {
     if (!this.dynamoDbDatastore) {
-      const documentClient = new DocumentClient();
+      const baseClient = new DynamoDB();
+      const documentClient = DynamoDBDocumentClient.from(baseClient);
       this.dynamoDbDatastore = new DynamoDbDatastoreImplementation(documentClient);
     }
     return this.dynamoDbDatastore;

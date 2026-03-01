@@ -22,7 +22,7 @@ class MappingsRepositoryImplementation implements MappingsRepository {
         return result;
       }
     } catch (e) {
-      console.log(`Lookup failed key: ${accountPart}@${hostPart} ${e}`);
+      console.log(`Lookup failed key: ${accountPart}@${hostPart}`, e);
       // continue
     }
     try {
@@ -35,7 +35,7 @@ class MappingsRepositoryImplementation implements MappingsRepository {
         return result;
       }
     } catch (e) {
-      console.log(`Lookup failed key: @${hostPart} ${e}`);
+      console.log(`Lookup failed key: @${hostPart}`, e);
       // continue
     }
     return undefined;

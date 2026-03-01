@@ -1,4 +1,4 @@
-import { S3 } from "aws-sdk";
+import { S3 } from "@aws-sdk/client-s3";
 import { StorageDatastore } from "./interface";
 
 class StorageDatastoreImplementation implements StorageDatastore {
@@ -7,19 +7,22 @@ class StorageDatastoreImplementation implements StorageDatastore {
     this.client = client;
   }
 
-  public async getObjectBinaryAsync(bucketName: string, key: string): Promise<Buffer> {
+  public async getObjectBinaryAsync(bucketName: string, key: string): Promise<Uint8Array> {
     const result = await this.client
       .getObject({
         Bucket: bucketName,
         Key: key,
-      })
-      .promise();
-    return result.Body as Buffer;
+      });
+    if (result.Body === undefined) {
+      throw new Error(`Object not found: s3://${bucketName}/${key}`);
+    }
+    const bytes = await result.Body.transformToByteArray();
+    return bytes;
   }
 
   public async getObjectBinaryBlobAsync(bucketName: string, key: string): Promise<Blob> {
     const result = await this.getObjectBinaryAsync(bucketName, key);
-    return new Blob([result]);
+    return new Blob([new Uint8Array(result)]);
   }
 }
 export default StorageDatastoreImplementation;

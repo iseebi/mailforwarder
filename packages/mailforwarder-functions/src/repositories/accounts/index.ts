@@ -1,2 +1,4 @@
+import AccountsRepositoryImplementation from "./implements";
+
 export * from "./interface";
-export * from "./implements";
+export { AccountsRepositoryImplementation };

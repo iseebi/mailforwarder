@@ -1,15 +1,18 @@
-import { ReceiverDatastoreAuthorizationPlugin } from "./interface";
 import { GoogleAuth } from "google-auth-library";
 import * as fs from "node:fs/promises";
+import { ReceiverDatastoreAuthorizationPlugin } from "./interface";
 
 class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlugin {
   private configured: boolean | undefined = undefined;
-  private serviceAccountIdTokenUrl: string = "";
+  private serviceAccountIdTokenUrl = "";
 
   private cachedToken: { token: string; issuedAt: Date } | null = null;
   private tokenExpiryDurationMs: number = 5 * 60 * 1000; // 5 minutes
 
-  public async interceptRequestHeadersAsync(url: string, currentHeaders: Record<string, string>): Promise<Record<string, string>> {
+  public async interceptRequestHeadersAsync(
+    url: string,
+    currentHeaders: Record<string, string>,
+  ): Promise<Record<string, string>> {
     if (!(await this.detectEnvironment())) {
       return currentHeaders;
     }
@@ -47,7 +50,7 @@ class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlug
     } catch (err) {
       const originalMessage = err instanceof Error ? err.message : String(err);
       throw new Error(
-        `Failed to generate ID token via "${this.serviceAccountIdTokenUrl}" for audience "${audience}" when accessing "${url}": ${originalMessage}`
+        `Failed to generate ID token via "${this.serviceAccountIdTokenUrl}" for audience "${audience}" when accessing "${url}": ${originalMessage}`,
       );
     }
   }
@@ -64,14 +67,19 @@ class GoogleIAMAuthorizationPlugin implements ReceiverDatastoreAuthorizationPlug
         const config = JSON.parse(configContents) as { service_account_impersonation_url?: string };
         if (config.service_account_impersonation_url) {
           this.configured = true;
-          this.serviceAccountIdTokenUrl = config.service_account_impersonation_url.replace(/:[^:]*$/, ":generateIdToken");
+          this.serviceAccountIdTokenUrl = config.service_account_impersonation_url.replace(
+            /:[^:]*$/,
+            ":generateIdToken",
+          );
           return true;
         }
       }
     } catch {
       // ignore
     }
-    console.warn("GoogleIAMAuthorizationPlugin is not configured properly. Missing GOOGLE_APPLICATION_CREDENTIALS environment variable or file does not exist.");
+    console.warn(
+      "GoogleIAMAuthorizationPlugin is not configured properly. Missing GOOGLE_APPLICATION_CREDENTIALS environment variable or file does not exist.",
+    );
     this.configured = false;
     return false;
   }
