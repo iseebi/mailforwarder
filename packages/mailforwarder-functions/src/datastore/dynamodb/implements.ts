@@ -22,7 +22,9 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     key: DatabaseKey,
     options?: Partial<GetItemInput>,
   ): Promise<IDatabaseObject<T>> {
-    const res = await this.client
+    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
+    // If yes, please remove .promise(). If not, remove this comment.
+    this.client
       .get({
         ...options,
         Key: key,
@@ -37,7 +39,9 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     item: T,
     options?: Partial<PutItemInput>,
   ): Promise<IDatabaseObject<T>> {
-    const res = await this.client
+    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
+    // If yes, please remove .promise(). If not, remove this comment.
+    this.client
       .put({
         ...options,
         Item: item,
@@ -57,7 +61,9 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     item: Partial<T>,
     options?: Partial<UpdateItemInput>,
   ): Promise<IDatabaseObject<T>> {
-    const res = await this.client
+    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
+    // If yes, please remove .promise(). If not, remove this comment.
+    this.client
       .update({
         ...options,
         Key: key,
@@ -80,7 +86,9 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
     key: DatabaseKey,
     options?: Partial<DeleteItemInput>,
   ): Promise<void> {
-    await this.client
+    await // The `.promise()` call might be on an JS SDK v2 client API.
+    // If yes, please remove .promise(). If not, remove this comment.
+    this.client
       .delete({
         ...options,
         Key: key,
@@ -117,7 +125,9 @@ class DynamoDbDatastoreImplementation implements DynamoDbDatastore {
       };
     })();
 
-    const res = await this.client.query(params).promise();
+    const res = await // The `.promise()` call might be on an JS SDK v2 client API.
+    // If yes, please remove .promise(). If not, remove this comment.
+    this.client.query(params).promise();
     return (res.Items || []).map((i) => ({ item: i as T }));
   }
 }

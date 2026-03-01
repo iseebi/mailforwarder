@@ -1,4 +1,5 @@
-import { S3, SQS } from "aws-sdk";
+import { S3 } from "@aws-sdk/client-s3";
+import { SQS } from "@aws-sdk/client-sqs";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
 import constants from "./constants";
 import { DynamoDbDatastore } from "./datastore/dynamodb";
